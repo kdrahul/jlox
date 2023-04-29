@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Lox {
+    static boolean hadError = false;
+
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: jlox [script]");
@@ -25,11 +27,12 @@ public class Lox {
         InputStreamReader input = new InputStreamReader(System.in); // Bridge between byte streams and char streams
         BufferedReader reader = new BufferedReader(input);
 
-        for (; ; ) {
+        while (true) {
             System.out.println("> ");
             String line = reader.readLine();
             if (line == null) break;
             run(line);
+            hadError = false;
         }
     }
 
@@ -41,8 +44,25 @@ public class Lox {
 
     }
 
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
+
+    private static void report(int line, String where, String message) {
+        System.err.println("[line "
+                + line
+                + "] Error"
+                + where
+                + ": "
+                + message);
+
+        hadError = true;
+
+    }
+
     private static void runfile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
+        if (hadError) System.exit(65);
     }
 }
