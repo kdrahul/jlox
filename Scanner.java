@@ -90,9 +90,33 @@ public class Scanner {
                 break;
 
             default:
+              if (Character.isDigit(c)) {
+                number();
+              } else {
                 Lox.error(line, "Unexpected character.");
+              }
                 break;
         }
+    }
+
+    private void number() {
+      while(Character.isDigit(peek())) advance();
+
+      // Look for a fractional part
+      if(peek() == '.' && Character.isDigit(peekNext())) {
+
+        // Consume the "."
+        advance();
+
+        while(Character.isDigit(peek())) advance();
+      }
+
+      addToken(TokenType.NUMBER, Double.parseDouble(source.substring(start, current)));
+    }
+
+    private char peekNext() {
+      if(current + 1 >= source.length()) return '\0';
+      return source.charAt(current +1);
     }
 
     private void string() {
