@@ -13,12 +13,12 @@ public class Lox {
     static boolean hadError = false;
 
     public static void main(String[] args) throws IOException {
-        if (args.length > 1) {
+        if (args.length > 1) { // If its more than 1 argument then throw error and display instructions
             System.out.println("Usage: jlox [script]");
             System.exit(64);
-        } else if (args.length == 1) {
+        } else if (args.length == 1) { // If 1 argument is passed then consider it as a file and process it
             runfile(args[0]);
-        } else {
+        } else { // If no arguments are passed, then start the prompt
             runPrompt();
         }
     }
